@@ -1,8 +1,7 @@
 ### GET request to example server
 GET http://localhost:8080/payments/installment/10
 ###
-###
-GET http://localhost:8080/installments/1
+GET http://localhost:8080/installments/2
 ###
 POST http://localhost:8080/installments
 Content-Type: application/json
@@ -13,4 +12,5 @@ Content-Type: application/json
   "months": 12,
   "startDate": "2025-06-04"
 }
+###
 
