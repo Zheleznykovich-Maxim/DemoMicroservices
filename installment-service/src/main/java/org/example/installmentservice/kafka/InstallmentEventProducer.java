@@ -2,6 +2,7 @@ package org.example.installmentservice.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.example.installmentservice.domain.model.Installment;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -15,7 +16,9 @@ public class InstallmentEventProducer {
 
     public void sendInstallmentCreatedEvent(Installment installment) throws JsonProcessingException {
         String topic = "installment.created";
-        String message = new ObjectMapper().    writeValueAsString(installment);
+        String message = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .writeValueAsString(installment);
         kafkaTemplate.send(topic, message);
     }
 }

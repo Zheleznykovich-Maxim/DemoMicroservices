@@ -3,14 +3,14 @@ server:
 
 spring:
   application:
-    name: user-service
+    name: installment-service
   datasource:
     url: jdbc:postgresql://localhost:5432/installments
     username: postgres
     password: password
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
   kafka:
     bootstrap-servers: localhost:9092
