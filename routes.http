@@ -1,0 +1,16 @@
+### GET request to example server
+GET http://localhost:8080/payments/installment/10
+###
+###
+GET http://localhost:8080/installments/1
+###
+POST http://localhost:8080/installments
+Content-Type: application/json
+
+{
+  "customerId": "123456",
+  "amount": 5000.75,
+  "months": 12,
+  "startDate": "2025-06-04"
+}
+
