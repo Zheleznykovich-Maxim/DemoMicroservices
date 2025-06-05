@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "your-dockerhub-user/installment-service"
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-org/main-repo.git'
+            }
+        }
+
+        stage('Build') {
+            dir('installment-service') {
+                steps {
+                    sh './mvnw clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                dir('installment-service') {
+                    script {
+                        docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                            def image = docker.build(IMAGE_NAME)
+                            image.push('latest')
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
