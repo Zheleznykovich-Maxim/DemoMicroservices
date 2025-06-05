@@ -2,36 +2,52 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "your-dockerhub-user/installment-service"
+        IMAGE_NAME = 'babyaltushka/installment-service'
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-org/main-repo.git'
+                checkout scm
             }
         }
 
-        stage('Build') {
-            dir('installment-service') {
-                steps {
-                    sh './mvnw clean package -DskipTests'
+        stage('Build with Gradle') {
+            steps {
+                dir('installment-service') {
+                    sh './gradlew clean build'
                 }
             }
         }
 
-        stage('Docker Build & Push') {
+        stage('Docker Build') {
             steps {
                 dir('installment-service') {
                     script {
-                        docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                            def image = docker.build(IMAGE_NAME)
-                            image.push('latest')
-                        }
+                        docker.build("${IMAGE_NAME}")
                     }
                 }
             }
+        }
+
+        stage('Docker Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKERHUB_CREDENTIALS}") {
+                        docker.image("${IMAGE_NAME}").push('latest')
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ installment-service построен и загружен в Docker Hub'
+        }
+        failure {
+            echo '❌ Ошибка при сборке installment-service'
         }
     }
 }

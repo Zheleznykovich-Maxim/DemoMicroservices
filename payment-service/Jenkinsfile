@@ -2,27 +2,31 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'your-dockerhub-username/payment-service'
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds' // Имя Jenkins credentials для DockerHub
+        IMAGE_NAME = 'babyaltushka/payment-service'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm // Забирает код из Git (предполагается GitHub)
+                checkout scm
             }
         }
 
-        stage('Build with Maven') {
+        stage('Build with Gradle') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                dir('payment-service') {
+                    sh './gradlew clean build'
+                }
             }
         }
 
         stage('Docker Build') {
             steps {
-                script {
-                    docker.build("${IMAGE_NAME}")
+                dir('payment-service') {
+                    script {
+                        docker.build("${IMAGE_NAME}")
+                    }
                 }
             }
         }
@@ -31,7 +35,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', "${DOCKERHUB_CREDENTIALS}") {
-                        docker.image("${IMAGE_NAME}").push("latest")
+                        docker.image("${IMAGE_NAME}").push('latest')
                     }
                 }
             }
@@ -40,10 +44,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ CI/CD pipeline completed successfully!'
+            echo '✅ payment-service построен и загружен в Docker Hub'
         }
         failure {
-            echo '❌ Build failed. Check logs.'
+            echo '❌ Ошибка при сборке payment-service'
         }
     }
 }

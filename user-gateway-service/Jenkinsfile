@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'your-dockerhub-username/user-gateway-service'
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds' // Jenkins credentials ID
+        IMAGE_NAME = 'babyaltushka/user-gateway-service'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
     }
 
     stages {
@@ -13,9 +13,9 @@ pipeline {
             }
         }
 
-        stage('Build with Maven') {
+        stage('Build with Gradle') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                sh './gradlew clean build'
             }
         }
 
@@ -40,10 +40,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ user-gateway-service built and pushed successfully!'
+            echo '✅ Gradle build + Docker push завершены!'
         }
         failure {
-            echo '❌ Build failed. Check logs.'
+            echo '❌ Что-то пошло не так. Смотри логи.'
         }
     }
 }
