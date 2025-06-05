@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    echo 'Йоу'
     environment {
         IMAGE_NAME = 'babyaltushka/installment-service'
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
