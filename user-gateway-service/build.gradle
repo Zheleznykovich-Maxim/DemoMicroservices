@@ -39,3 +39,7 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+jar {
+    archiveBaseName.set('user-ggateway-service')
+}
