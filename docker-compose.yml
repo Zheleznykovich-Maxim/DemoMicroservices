@@ -53,6 +53,37 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+  elasticsearch:
+    image: docker.io/elasticsearch:8.13.4  # попробуй, может доступен
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - elk
+
+  logstash:
+    image: docker.io/logstash:8.13.4
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    networks:
+      - elk
+
+  kibana:
+    image: docker.io/kibana:8.13.4
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - elk
+
+networks:
+  elk:
+
 volumes:
   installment_pgdata:
   payment_pgdata:

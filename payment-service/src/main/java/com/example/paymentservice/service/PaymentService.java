@@ -4,6 +4,8 @@ import com.example.paymentservice.domain.model.Payment;
 import com.example.paymentservice.exception.InstallmentNotFoundException;
 import com.example.paymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,14 +18,17 @@ import java.util.List;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Cacheable(value = "payments", key = "#installmentId")
     public List<Payment> getPaymentsByInstallmentId(Long installmentId) {
+
         boolean exists = paymentRepository.existsByInstallmentId(installmentId);
         if (!exists) {
             throw new InstallmentNotFoundException(installmentId);
         }
         System.out.println("Loading payments from DB for installmentId = " + installmentId);
+        log.info("Installment found with id: {}", installmentId);
         return paymentRepository.findByInstallmentId(installmentId);
     }
 
