@@ -1,5 +1,4 @@
-FROM openjdk:17-jdk-slim
-
+FROM gradle:8.5-jdk17
 WORKDIR /app
 
 COPY build/libs/payment-service-*.jar app.jar
