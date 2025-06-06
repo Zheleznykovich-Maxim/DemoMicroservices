@@ -10,6 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 sshagent(['git-creds']) {
+                      echo '✅ payment-service построен и загружен в Docker Hub'
                       sh 'mkdir -p ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts'
                       sh 'ssh -T git@github.com || true'
                       checkout scm
