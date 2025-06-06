@@ -40,3 +40,8 @@ tasks.named('test') {
 jar {
     archiveBaseName.set('payment-service')
 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
