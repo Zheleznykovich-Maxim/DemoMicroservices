@@ -13,9 +13,8 @@ pipeline {
                     sh '''
                         mkdir -p ~/.ssh
                         ssh-keyscan -t rsa,ecdsa,ed25519 github.com >> ~/.ssh/known_hosts
-
-                    '''
-                    checkout scm
+                        git clone git@github.com:Zheleznykovich-Maxim/DemoMicroservices.git
+                                '''
                 }
             }
         }
