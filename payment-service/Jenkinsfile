@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'git clone https://github.com/Zheleznykovich-Maxim/DemoMicroservices1'
+                checkout scm
             }
         }
 
