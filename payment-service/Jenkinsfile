@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'my-jenkins-with-jdk-docker-xargs'
+        }
+    }
 
     environment {
         IMAGE_NAME = 'babyaltushka/payment-service'
@@ -7,18 +11,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                sshagent(['git-creds']) {
-                    sh '''
-                        mkdir -p ~/.ssh
-                        ssh-keyscan -t rsa,ecdsa,ed25519 github.com >> ~/.ssh/known_hosts
-                        git clone git@github.com:Zheleznykovich-Maxim/DemoMicroservices.git
-                                '''
-                }
-            }
-        }
-
 
         stage('Build with Gradle') {
             steps {
